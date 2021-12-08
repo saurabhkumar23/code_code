@@ -1,1 +1,43 @@
+---> Question solving flow :
 
+  -> think faith >> draw recursive tree >> write recursive code >> 
+     do memoization >> observation >> do tabulation >> optimization ~sometimes
+  -> first flow takes the almost time and the base of DP, second flow hardly takes 3 minutes.
+  -> memoization or tabulation ? - always invest yourself in memoization. intuition never comes by tabulation. also memo to tab hardly takes 3 minutes via only small changes.
+  -> tabulation ? - memoization is actual DP, but when if mujhe kuch pattern observe ho raha hai. ye to shayad me iteratively bhi kar sakta hu. that is tabulation.
+  -> real life dp ? - cooking something new via Yt takes time only for the first time.
+  -> dp says if you have already evaluation a solution to a problem then don't solve it again, just save that solution into some space and utilise it
+  
+ -> fibonacci 
+ 
+    public static int fibo_rec(int n){
+        if(n <= 1){
+            return n;
+        }
+        int fib = fibo_rec(n-1) + fibo_rec(n-2);
+        return fib;
+    }
+    
+     public static int fibo_memo(int n,int[] dp){
+        if(n <= 1){
+            return dp[n] = n;
+        }
+        if(dp[n] != 0){
+            return dp[n];
+        }
+        int fib = fibo_memo(n-1,dp) + fibo_memo(n-2,dp);
+        return dp[n] = fib;
+    }
+    
+     public static int fibo_tab(int N,int[] dp){
+        for(int n = 0 ; n <= N ; n++){
+            if(n <= 1){
+                dp[n] = n;
+                continue;
+            }
+            int fib = dp[n-1] + dp[n-2];
+            dp[n] = fib;
+        }
+        return dp[N];
+    }
+    
