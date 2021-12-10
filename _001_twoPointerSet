@@ -41,7 +41,7 @@
         return dp[N];
     }
     
- -> maze path
+ -> maze path ways
  
      public static int mazePathWays_rec(int[][] maze,int sr,int sc,int dr,int dc,int[][] dir){
         if(sr == dr && sc == dc){
@@ -97,7 +97,7 @@
         return dp[SR][SC];
     }
     
- -> maze path with jumps
+ -> maze path with jumps ways
  
      public static int mazePathJumpWays_rec(int[][] maze,int sr,int sc,int dr,int dc,int[][] dir){
         if(sr == dr && sc == dc){
@@ -159,3 +159,51 @@
         return dp[SR][SC];
     }
  
+-> climb 3 stairs ways
+
+    public static int climb3StairsWays_rec(int n){
+        if(n == 0){
+            return 1;
+        }
+        int ways = 0;
+        for(int i = 1 ; i <= 3 ; i++){
+            if(n - i >= 0){
+                ways += climb3StairsWays_rec(n-i);
+            }
+        }
+        return ways;
+    }
+    
+    public static int climb3StairsWays_memo(int n,int[] dp){
+        if(n == 0){
+            return dp[n] = 1;
+        }
+        if(dp[n] != 0){
+            return dp[n];
+        }
+        int ways = 0;
+        for(int i = 1 ; i <= 3 ; i++){
+            if(n - i >= 0){
+                ways += climb3StairsWays_memo(n-i,dp);
+            }
+        }
+        return dp[n] = ways;
+    }
+    
+    public static int climb3StairsWays_tab(int N,int[] dp){
+        for(int n = 0 ; n <= N ; n++){
+            if(n == 0){
+                dp[n] = 1;
+                continue;
+            }
+            int ways = 0;
+            for(int i = 1 ; i <= 3 ; i++){
+                if(n - i >= 0){
+                    ways += dp[n-i];
+                }
+            }
+            dp[n] = ways;
+        }
+        return dp[N];
+    }
+  
