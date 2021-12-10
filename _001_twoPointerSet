@@ -44,23 +44,21 @@
  -> maze path
  
      public static int mazePathWays_rec(int[][] maze,int sr,int sc,int dr,int dc,int[][] dir){
-        if(sr > dr || sc > dc){
-            return 0;
-        }
         if(sr == dr && sc == dc){
             return 1;
         }
         int ways = 0;
-        for(int i = 0 ; i < 3 ; i++){
-            ways += mazePathWays_rec(maze , sr + dir[i][0] , sc + dir[i][1] ,dr,dc,dir);
+        for(int i = 0 ; i < dir.length ; i++){
+            int r = sr + dir[i][0];
+            int c = sc + dir[i][1];
+            if(r <= dr && c <= dc){
+               ways += mazePathWays_rec(maze , r , c , dr , dc , dir);
+            }
         }
         return ways;
     }
 
     public static int mazePathWays_memo(int[][] maze,int sr,int sc,int dr,int dc,int[][] dir,int[][] dp){
-        if(sr > dr || sc > dc){
-            return 0;
-        }
         if(sr == dr && sc == dc){
             return dp[sr][sc] = 1;
         }
@@ -68,8 +66,12 @@
             return dp[sr][sc];
         }
         int ways = 0;
-        for(int i = 0 ; i < 3 ; i++){
-            ways += mazePathWays_memo(maze , sr + dir[i][0] , sc + dir[i][1] ,dr,dc,dir,dp);
+        for(int i = 0 ; i < dir.length ; i++){
+            int r = sr + dir[i][0];
+            int c = sc + dir[i][1];
+            if(r <= dr && c <= dc){
+               ways += mazePathWays_memo(maze , r , c , dr , dc , dir , dp);
+            }
         }
         return dp[sr][sc] = ways;
     }
@@ -82,9 +84,9 @@
                     continue;
                 }
                 int ways = 0;
-                for(int i = 0 ; i < 3 ; i++){
-                    int c = sc + dir[i][0];
-                    int r = sr + dir[i][1];
+                for(int i = 0 ; i < dir.length ; i++){
+                    int r = sr + dir[i][0];
+                    int c = sc + dir[i][1];
                     if(r <= DR && c <= DC){
                         ways += dp[r][c];
                     }
@@ -97,4 +99,63 @@
     
  -> maze path with jumps
  
+     public static int mazePathJumpWays_rec(int[][] maze,int sr,int sc,int dr,int dc,int[][] dir){
+        if(sr == dr && sc == dc){
+            return 1;
+        }
+        int ways = 0;
+        for(int i = 0 ; i < dir.length ; i++){
+            int r = sr + dir[i][0];
+            int c = sc + dir[i][1];
+            while(r <= dr && c <= dc){
+               ways += mazePathJumpWays_rec(maze , r , c , dr , dc , dir);
+               r += dir[i][0];
+               c += dir[i][1];
+            }
+        }
+        return ways;
+    }
+    
+    public static int mazePathJumpWays_memo(int[][] maze,int sr,int sc,int dr,int dc,int[][] dir,int[][] dp){
+        if(sr == dr && sc == dc){
+            return dp[sr][sc] = 1;
+        }
+        if(dp[sr][sc] != 0){
+            return dp[sr][sc];
+        }
+        int ways = 0;
+        for(int i = 0 ; i < dir.length ; i++){
+            int r = sr + dir[i][0];
+            int c = sc + dir[i][1];
+            while(r <= dr && c <= dc){
+               ways += mazePathJumpWays_memo(maze , r , c , dr , dc , dir , dp);
+               r += dir[i][0];
+               c += dir[i][1];
+            }
+        }
+        return dp[sr][sc] = ways;
+    }
+    
+    public static int mazePathJumpWays_tab(int[][] maze,int SR,int SC,int DR,int DC,int[][] dir,int[][] dp){
+        for(int sr = DR ; sr >= SR ; sr--){
+            for(int sc = DC ; sc >= SC ; sc--){
+                if(sr == DR && sc == DC){
+                    dp[sr][sc] = 1;
+                    continue;
+                }
+                int ways = 0;
+                for(int i = 0 ; i < dir.length ; i++){
+                    int r = sr + dir[i][0];
+                    int c = sc + dir[i][1];
+                    while(r <= DR && c <= DC){
+                        ways += dp[r][c];
+                        r += dir[i][0];
+                        c += dir[i][1];
+                    }
+                }
+                dp[sr][sc] = ways;
+            }
+        }
+        return dp[SR][SC];
+    }
  
