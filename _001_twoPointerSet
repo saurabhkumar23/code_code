@@ -222,4 +222,105 @@
         }
         return dp[N];
     }
+    
+ -> decode ways ( leetcode 91)
+ 
+     public static int numDecodings_rec(String s,int idx){
+        if(idx == s.length()){
+            return 1;
+        }
+        char ch1 = s.charAt(idx);
+        int n1 = ch1 - '0';
+        int ways = 0;
+        if(n1 > 0){
+            ways += numDecodings_rec(s,idx + 1);
+            if(idx < s.length() - 1){
+                char ch2 = s.charAt(idx + 1);
+                int n2 = ch2 - '0';
+                n2 = (n1 * 10) + n2;
+                if(n2 <= 26){
+                    ways += numDecodings_rec(s,idx + 2);
+                }
+            }
+        }
+        return ways;
+    }
+    
+    public static int numDecodings_memo(String s,int idx,int[] dp){
+        if(idx == s.length()){
+            return dp[idx] = 1;
+        }
+        if(dp[idx] != -1){
+            return dp[idx];
+        }
+        char ch1 = s.charAt(idx);
+        int n1 = ch1 - '0';
+        int ways = 0;
+        if(n1 > 0){
+            ways += numDecodings_memo(s,idx + 1,dp);
+            if(idx < s.length() - 1){
+                char ch2 = s.charAt(idx + 1);
+                int n2 = ch2 - '0';
+                n2 = (n1 * 10) + n2;
+                if(n2 <= 26){
+                    ways += numDecodings_memo(s,idx + 2,dp);
+                }
+            }
+        }
+        return dp[idx] = ways;
+    }
+    
+    public static int numDecodings_tab(String s,int IDX,int[] dp){
+        for(int idx = s.length() ; idx >= 0 ; idx--){
+            if(idx == s.length()){
+                dp[idx] = 1;
+                continue;
+            }
+            char ch1 = s.charAt(idx);
+            int n1 = ch1 - '0';
+            int ways = 0;
+            if(n1 > 0){
+                ways += dp[idx + 1];
+                if(idx < s.length() - 1){
+                    char ch2 = s.charAt(idx + 1);
+                    int n2 = ch2 - '0';
+                    n2 = (n1 * 10) + n2;
+                    if(n2 <= 26){
+                        ways += dp[idx + 2];
+                    }
+                }
+            }
+            dp[idx] = ways;
+        }
+        return dp[IDX];
+    }
+    
+     
+    public static int numDecodings_tab_opti(String s){
+        int a = 0, b = 0;
+        for(int idx = s.length() ; idx >= 0 ; idx--){
+            if(idx == s.length()){
+                a = 1;
+                continue;
+            }
+            char ch1 = s.charAt(idx);
+            int n1 = ch1 - '0';
+            int ways = 0;
+            if(n1 > 0){
+                ways += a;
+                if(idx < s.length() - 1){
+                    char ch2 = s.charAt(idx + 1);
+                    int n2 = ch2 - '0';
+                    n2 = (n1 * 10) + n2;
+                    if(n2 <= 26){
+                        ways += b;
+                    }
+                }
+            }
+            b = a;
+            a = ways;
+        }
+        return a;
+    }
+  
   
