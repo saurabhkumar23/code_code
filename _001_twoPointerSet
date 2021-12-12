@@ -522,4 +522,62 @@
         }
         return a;
     }
-  
+ 
+ -> Gold Mine
+ 
+     public static int goldMine_rec(int[][] mine,int r,int c,int[][] dir){
+        if(c == mine[0].length - 1){
+            return mine[r][c];
+        }
+        int max_gold_so_far = 0;
+        for(int i = 0; i < dir.length; i++){
+            int nr = r + dir[i][0];
+            int nc = c + dir[i][1];
+            if(nr >= 0 && nr < mine.length){
+                int gold = goldMine_rec(mine,nr,nc,dir);
+                max_gold_so_far = Math.max(max_gold_so_far,gold);
+            }
+        }
+        return max_gold_so_far + mine[r][c];
+    }
+    
+    public static int goldMine_memo(int[][] mine,int r,int c,int[][] dir,int[][] dp){
+        if(c == mine[0].length - 1){
+            return dp[r][c] = mine[r][c];
+        }
+        if(dp[r][c] != -1){
+            return dp[r][c];
+        }
+        int max_gold_so_far = 0;
+        for(int i = 0; i < dir.length; i++){
+            int nr = r + dir[i][0];
+            int nc = c + dir[i][1];
+            if(nr >= 0 && nr < mine.length){
+                int gold = goldMine_memo(mine,nr,nc,dir,dp);
+                max_gold_so_far = Math.max(max_gold_so_far,gold);
+            }
+        }
+        return dp[r][c] = (max_gold_so_far + mine[r][c]);
+    }
+    
+    public static int goldMine_tab(int[][] mine,int R,int C,int[][] dir,int[][] dp){
+        for(int c = mine[0].length - 1 ; c >= 0 ; c--){
+            for(int r = 0 ; r < mine.length ; r++){
+                if(c == mine[0].length - 1){
+                    dp[r][c] = mine[r][c];
+                    continue;
+                }
+                int max_gold_so_far = 0;
+                for(int i = 0; i < dir.length; i++){
+                    int nr = r + dir[i][0];
+                    int nc = c + dir[i][1];
+                    if(nr >= 0 && nr < mine.length){
+                        int gold = dp[nr][nc];
+                        max_gold_so_far = Math.max(max_gold_so_far,gold);
+                    }
+                }
+                dp[r][c] = (max_gold_so_far + mine[r][c]);
+            }
+        }
+        return dp[R][C];
+    }
