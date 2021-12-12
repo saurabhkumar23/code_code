@@ -323,4 +323,203 @@
         return a;
     }
   
+-> Decode Ways II ( leetcode 639 )
+
+    static int mod = (int) 1e9 + 7;
+    public static long numDecod2_rec(String s,int idx){
+        if(idx == s.length()){
+            return 1;
+        }
+        char ch1 = s.charAt(idx);
+        if(ch1 == '0'){
+            return 0;
+        }
+        long ways = 0;
+        if(ch1 == '*'){
+            ways = (ways + 9 * numDecod2_rec(s,idx + 1)) % mod;
+            if(idx < s.length() - 1){
+                char ch2 = s.charAt(idx + 1);
+                if(ch2 >= '0' && ch2 <= '6'){
+                    ways = (ways + 2 * numDecod2_rec(s,idx + 2)) % mod;
+                }
+                else if(ch2 >= '7' && ch2 <= '9'){
+                    ways = (ways + 1 * numDecod2_rec(s,idx + 2)) % mod;
+                }
+                else{
+                    ways = (ways + 15 * numDecod2_rec(s,idx + 2)) % mod;
+                }
+            }
+        }
+        else{
+            ways = (ways + 1 * numDecod2_rec(s,idx + 1)) % mod;
+            if(idx < s.length() - 1){
+                char ch2 = s.charAt(idx + 1);
+                if(ch2 == '*' && ch1 == '1'){
+                    ways = (ways + 9 * numDecod2_rec(s,idx + 2)) % mod;
+                }
+                else if(ch2 == '*' && ch1 == '2'){
+                    ways = (ways + 6 * numDecod2_rec(s,idx + 2)) % mod;
+                }
+                else{
+                    int num = ((ch1 - '0') * 10 + (ch2 - '0'));
+                    if(num <= 26){
+                        ways = (ways + 1 * numDecod2_rec(s,idx + 2)) % mod;
+                    }
+                }
+            }
+        }
+        return ways;
+    }
+    
+    public static long numDecod2_memo(String s,int idx,long[] dp){
+        if(idx == s.length()){
+            return dp[idx] = 1;
+        }
+        if(dp[idx] != -1){
+            return dp[idx];
+        }
+        char ch1 = s.charAt(idx);
+        if(ch1 == '0'){
+            return dp[idx] = 0;
+        }
+        long ways = 0;
+        if(ch1 == '*'){
+            ways = (ways + 9 * numDecod2_memo(s,idx + 1,dp)) % mod;
+            if(idx < s.length() - 1){
+                char ch2 = s.charAt(idx + 1);
+                if(ch2 >= '0' && ch2 <= '6'){
+                    ways = (ways + 2 * numDecod2_memo(s,idx + 2,dp)) % mod;
+                }
+                else if(ch2 >= '7' && ch2 <= '9'){
+                    ways = (ways + 1 * numDecod2_memo(s,idx + 2,dp)) % mod;
+                }
+                else{
+                    ways = (ways + 15 * numDecod2_memo(s,idx + 2,dp)) % mod;
+                }
+            }
+        }
+        else{
+            ways = (ways + 1 * numDecod2_memo(s,idx + 1,dp)) % mod;
+            if(idx < s.length() - 1){
+                char ch2 = s.charAt(idx + 1);
+                if(ch2 == '*' && ch1 == '1'){
+                    ways = (ways + 9 * numDecod2_memo(s,idx + 2,dp)) % mod;
+                }
+                else if(ch2 == '*' && ch1 == '2'){
+                    ways = (ways + 6 * numDecod2_memo(s,idx + 2,dp)) % mod;
+                }
+                else if(ch2 != '*'){
+                    int num = ((ch1 - '0') * 10 + (ch2 - '0'));
+                    if(num <= 26){
+                        ways = (ways + 1 * numDecod2_memo(s,idx + 2,dp)) % mod;
+                    }
+                }
+            }
+        }
+        return dp[idx] = ways;
+    }
+    
+    public static long numDecod2_tab(String s,int IDX,long[] dp){
+        for(int  idx = s.length() ; idx >= 0 ; idx--){
+            if(idx == s.length()){
+                dp[idx] = 1;
+                continue;
+            }
+            char ch1 = s.charAt(idx);
+            if(ch1 == '0'){
+                dp[idx] = 0;
+                continue;
+            }
+            long ways = 0;
+            if(ch1 == '*'){
+                ways = (ways + 9 * dp[idx + 1]) % mod;
+                if(idx < s.length() - 1){
+                    char ch2 = s.charAt(idx + 1);
+                    if(ch2 >= '0' && ch2 <= '6'){
+                        ways = (ways + 2 * dp[idx + 2]) % mod;
+                    }
+                    else if(ch2 >= '7' && ch2 <= '9'){
+                        ways = (ways + 1 * dp[idx + 2]) % mod;
+                    }
+                    else{
+                        ways = (ways + 15 * dp[idx + 2]) % mod;
+                    }
+                }
+            }
+            else{
+                ways = (ways + 1 * dp[idx + 1]) % mod;
+                if(idx < s.length() - 1){
+                    char ch2 = s.charAt(idx + 1);
+                    if(ch2 == '*' && ch1 == '1'){
+                        ways = (ways + 9 * dp[idx + 2]) % mod;
+                    }
+                    else if(ch2 == '*' && ch1 == '2'){
+                        ways = (ways + 6 * dp[idx + 2]) % mod;
+                    }
+                    else if(ch2 != '*'){
+                        int num = ((ch1 - '0') * 10 + (ch2 - '0'));
+                        if(num <= 26){
+                            ways = (ways + 1 * dp[idx + 2]) % mod;
+                        }
+                    }
+                }
+            }
+            dp[idx] = ways;
+        }
+        return dp[IDX];
+    }
+    
+    public static long numDecod2_tab_opti(String s){
+        long a = 0;
+        long b = 0;
+        for(int  idx = s.length() ; idx >= 0 ; idx--){
+            if(idx == s.length()){
+                a = 1;
+                continue;
+            }
+            char ch1 = s.charAt(idx);
+            if(ch1 == '0'){
+                b = a;
+                a = 0;
+                continue;
+            }
+            long ways = 0;
+            if(ch1 == '*'){
+                ways = (ways + 9 * a) % mod;
+                if(idx < s.length() - 1){
+                    char ch2 = s.charAt(idx + 1);
+                    if(ch2 >= '0' && ch2 <= '6'){
+                        ways = (ways + 2 * b) % mod;
+                    }
+                    else if(ch2 >= '7' && ch2 <= '9'){
+                        ways = (ways + 1 * b) % mod;
+                    }
+                    else{
+                        ways = (ways + 15 * b) % mod;
+                    }
+                }
+            }
+            else{
+                ways = (ways + 1 * a) % mod;
+                if(idx < s.length() - 1){
+                    char ch2 = s.charAt(idx + 1);
+                    if(ch2 == '*' && ch1 == '1'){
+                        ways = (ways + 9 * b) % mod;
+                    }
+                    else if(ch2 == '*' && ch1 == '2'){
+                        ways = (ways + 6 * b) % mod;
+                    }
+                    else if(ch2 != '*'){
+                        int num = ((ch1 - '0') * 10 + (ch2 - '0'));
+                        if(num <= 26){
+                            ways = (ways + 1 * b) % mod;
+                        }
+                    }
+                }
+            }
+            b = a;
+            a = ways;
+        }
+        return a;
+    }
   
