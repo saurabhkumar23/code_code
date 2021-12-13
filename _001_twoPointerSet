@@ -581,3 +581,58 @@
         }
         return dp[R][C];
     }
+    
+ -> friends Pairing (gfg)
+ 
+    static int mod = (int) 1e9 + 7;
+    public static long friendsPairing_rec(int n){
+        if(n == 0){
+            return 1;
+        }
+        long single = friendsPairing_rec(n-1);
+        long paired = (n - 2) >= 0 ? (n - 1) *  friendsPairing_rec(n-2) : 0;
+        return (single + paired % mod) % mod;
+    }
+    
+    public static long friendsPairing_memo(int n,long[] dp){
+        if(n == 0){
+            return dp[n] = 1;
+        }
+        if(dp[n] != 0){
+           return dp[n]; 
+        }
+        long single = friendsPairing_memo(n-1,dp);
+        long paired = (n - 2) >= 0 ? (n - 1) *  friendsPairing_memo(n-2,dp) : 0;
+        return dp[n] = (single + paired % mod) % mod;
+    }
+    
+    public static long friendsPairing_tab(int N,long[] dp){
+        for(int n = 0; n <= N; n++){
+            if(n == 0){
+                dp[n] = 1;
+                continue;
+            }
+            long single = dp[n-1];
+            long paired = (n - 2) >= 0 ? (n - 1) *  dp[n-2] : 0;
+            dp[n] = (single + paired % mod) % mod;
+        }
+        return dp[N];
+    }
+    
+    public static long friendsPairing_tab_opti(int N){
+        long a = 0;
+        long b = 0;
+        for(int n = 0; n <= N; n++){
+            if(n == 0){
+                b = 1;
+                continue;
+            }
+            long single = b;
+            long paired = (n - 2) >= 0 ? (n - 1) *  a : 0;
+            long res = (single + paired % mod) % mod;
+            a = b;
+            b = res;
+        }
+        return b;
+    }
+ 
