@@ -635,4 +635,43 @@
         }
         return b;
     }
+    
+ -> No of ways of partition of set In K Subsets (gfg)
+ 
+     public static int partitionSetInKSubsets_rec(int n,int k){
+        if(n == k || k == 1){
+            return 1;
+        }
+        int selfGroup = partitionSetInKSubsets_rec(n - 1,k - 1);
+        int partOfGroup = partitionSetInKSubsets_rec(n - 1,k);
+        return selfGroup + (k * partOfGroup);
+    }
+    
+    public static int partitionSetInKSubsets_memo(int n,int k,int[][] dp){
+        if(n == k || k == 1){
+            return dp[n][k] = 1;
+        }
+        if(dp[n][k] != 0){
+            return dp[n][k];
+        }
+        int selfGroup = partitionSetInKSubsets_memo(n - 1,k - 1,dp);
+        int partOfGroup = partitionSetInKSubsets_memo(n - 1,k,dp);
+        return dp[n][k] = selfGroup + (k * partOfGroup);
+    }
+    
+    public static int partitionSetInKSubsets_tab(int N,int K,int[][] dp){
+        for(int n = 1; n <= N; n++){
+            for(int k = 1; k <= K; k++){
+                if(n == k || k == 1){
+                    dp[n][k] = 1;
+                    continue;
+                }
+                int selfGroup = dp[n-1][k-1];
+                int partOfGroup = dp[n-1][k];
+                dp[n][k] = selfGroup + (k * partOfGroup);
+            }
+        }
+        return dp[N][K];
+    }
+
  
