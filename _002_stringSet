@@ -1,1 +1,62 @@
+-> longest palindromic subsequence
 
+    public static int lps_rec(String s, int i,int j){
+        if(i >= j){
+            return i == j ? 1 : 0;
+        }
+        int local_lcs = 0;
+        if(s.charAt(i) == s.charAt(j)){
+            local_lcs = lps_rec(s, i + 1, j - 1);
+            local_lcs += 2;
+        }
+        else{
+            int lps1 = lps_rec(s, i + 1, j);
+            int lps2 = lps_rec(s, i, j - 1);
+            local_lcs = Math.max(lps1, lps2);
+            
+        }
+        return local_lcs;
+    }
+    
+    public static int lps_memo(String s, int i,int j, int[][] dp){
+        if(i >= j){
+            return dp[i][j] = (i == j ? 1 : 0);
+        }
+        int local_lcs = 0;
+        if(s.charAt(i) == s.charAt(j)){
+            local_lcs = lps_memo(s, i + 1, j - 1,dp);
+            local_lcs += 2;
+        }
+        else{
+            int lps1 = lps_memo(s, i + 1, j,dp);
+            int lps2 = lps_memo(s, i, j - 1,dp);
+            local_lcs = Math.max(lps1, lps2);
+            
+        }
+        return dp[i][j] = local_lcs;
+    }
+    
+    public static int lps_tab(String s, int I,int J, int[][] dp){
+        for(int gap = 0; gap < dp.length; gap++){
+            for(int i = 0, j = gap; j < dp[0].length; j++ , i++){
+                if(i >= j){
+                    dp[i][j] = (i == j ? 1 : 0);
+                    continue;
+                }
+                int local_lcs = 0;
+                if(s.charAt(i) == s.charAt(j)){
+                    local_lcs = dp[i + 1][j - 1]; 
+                    local_lcs += 2;
+                }
+                else{
+                    int lps1 = dp[i + 1][j]; 
+                    int lps2 = dp[i][j - 1]; 
+                    local_lcs = Math.max(lps1, lps2);
+                    
+                }
+                dp[i][j] = local_lcs;
+            }
+        }
+        return dp[I][J];
+    }
+    
