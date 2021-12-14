@@ -60,3 +60,61 @@
         return dp[I][J];
     }
     
+-> longest common subsequence
+
+    public static int lcs_rec(String s1, String s2, int l1, int l2){
+        if(l1 == 0 || l2 == 0){
+            return 0;
+        }
+        int local_lcs = 0;
+        if(s1.charAt(l1 - 1) == s2.charAt(l2 - 1)){
+            local_lcs = lcs_rec(s1,s2,l1 - 1,l2 - 1) + 1;
+        }
+        else{
+            int lcs1 = lcs_rec(s1,s2,l1 - 1,l2);
+            int lcs2 = lcs_rec(s1,s2,l1,l2 - 1);
+            local_lcs = Math.max(lcs1, lcs2);
+        }
+        return local_lcs;
+    }
+    
+    public static int lcs_memo(String s1, String s2, int l1, int l2, int[][] dp){
+        if(l1 == 0 || l2 == 0){
+            return dp[l1][l2] = 0;
+        }
+        if(dp[l1][l2] != -1){
+            return dp[l1][l2];
+        }
+        int local_lcs = 0;
+        if(s1.charAt(l1 - 1) == s2.charAt(l2 - 1)){
+            local_lcs = lcs_memo(s1,s2,l1 - 1,l2 - 1,dp) + 1;
+        }
+        else{
+            int lcs1 = lcs_memo(s1,s2,l1 - 1,l2,dp);
+            int lcs2 = lcs_memo(s1,s2,l1,l2 - 1,dp);
+            local_lcs = Math.max(lcs1, lcs2);
+        }
+        return dp[l1][l2] = local_lcs;
+    }
+    
+    public static int lcs_tab(String s1, String s2, int L1, int L2, int[][] dp){
+        for(int l1 = 0; l1 < dp.length; l1++){
+            for(int l2 = 0; l2 < dp[0].length; l2++){
+                 if(l1 == 0 || l2 == 0){
+                    dp[l1][l2] = 0;
+                    continue;
+                }
+                int local_lcs = 0;
+                if(s1.charAt(l1 - 1) == s2.charAt(l2 - 1)){
+                    local_lcs = dp[l1 - 1][l2 - 1] + 1;
+                }
+                else{
+                    int lcs1 = dp[l1 - 1][l2];
+                    int lcs2 = dp[l1][l2 - 1];
+                    local_lcs = Math.max(lcs1, lcs2);
+                }
+                dp[l1][l2] = local_lcs;
+            }
+        }
+        return dp[L1][L2];
+    }
