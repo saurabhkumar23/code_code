@@ -118,3 +118,73 @@
         }
         return dp[L1][L2];
     }
+    
+ -> Distinct Subsequences
+ 
+     public static int distinctSubsequences_rec(String s, String t, int l1, int l2){
+        if(l1 < l2){
+            return 0;
+        }
+        if(l2 == 0){
+            return 1;
+        }
+        int local_ds = 0;
+        if(s.charAt(l1 - 1) == t.charAt(l2 - 1)){
+            int ds1 = distinctSubsequences_rec(s, t, l1 - 1, l2 - 1);
+            int ds2 = distinctSubsequences_rec(s, t, l1 - 1, l2);
+            local_ds = ds1 + ds2;
+        }
+        else{
+            local_ds = distinctSubsequences_rec(s, t, l1 - 1, l2);
+        }
+        return local_ds;
+    }
+    
+    public static int distinctSubsequences_memo(String s, String t, int l1, int l2, int[][] dp){
+        if(l1 < l2){
+            return dp[l1][l2] = 0;
+        }
+        if(l2 == 0){
+            return dp[l1][l2] = 1;
+        }
+        if(dp[l1][l2] != -1){
+            return dp[l1][l2];
+        }
+        int local_ds = 0;
+        if(s.charAt(l1 - 1) == t.charAt(l2 - 1)){
+            int ds1 = distinctSubsequences_memo(s, t, l1 - 1, l2 - 1, dp);
+            int ds2 = distinctSubsequences_memo(s, t, l1 - 1, l2, dp);
+            local_ds = ds1 + ds2;
+        }
+        else{
+            local_ds = distinctSubsequences_memo(s, t, l1 - 1, l2, dp);
+        }
+        return dp[l1][l2] = local_ds;
+    }
+    
+    public static int distinctSubsequences_tab(String s, String t, int L1, int L2, int[][] dp){
+        for(int l1 = 0; l1 < dp.length; l1++){
+            for(int l2 = 0; l2 < dp[0].length; l2++){
+                if(l1 < l2){
+                    dp[l1][l2] = 0;
+                    continue;
+                }
+                if(l2 == 0){
+                    dp[l1][l2] = 1;
+                    continue;
+                }
+                int local_ds = 0;
+                if(s.charAt(l1 - 1) == t.charAt(l2 - 1)){
+                    int ds1 = dp[l1 - 1][l2 -1]; 
+                    int ds2 = dp[l1 - 1][l2]; 
+                    local_ds = ds1 + ds2;
+                }
+                else{
+                    local_ds = dp[l1 - 1][l2]; 
+                }
+                dp[l1][l2] = local_ds;
+            }
+        }
+        return dp[L1][L2];
+    }
+ 
