@@ -119,6 +119,20 @@
         return dp[L1][L2];
     }
     
+    public static int maxUncrossedLines_rec(int[] nums1, int[] nums2, int l1, int l2){
+        if(l1 == 0 || l2 == 0){
+            return 0;
+        }
+        if(nums1[l1 - 1] == nums2[l2 - 1]){
+            return maxUncrossedLines_rec(nums1, nums2, l1 - 1, l2 - 1) + 1;
+        }
+        else{
+            int ans1 = maxUncrossedLines_rec(nums1, nums2, l1 - 1, l2);
+            int ans2 = maxUncrossedLines_rec(nums1, nums2, l1, l2 - 1);
+            return Math.max(ans1, ans2);
+        }
+    }
+    
  -> Distinct Subsequences
  
      public static int distinctSubsequences_rec(String s, String t, int l1, int l2){
