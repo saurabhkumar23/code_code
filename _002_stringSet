@@ -393,4 +393,25 @@
         }
         return dp[L1][L2];
     }
+    
+ -> max dot product of 2 subsequences ( leetcode )
+ 
+     public static int maximum(int... arr){
+        int maxi = arr[0];
+        for(int i = 1; i < arr.length; i++){
+            maxi = Math.max(maxi, arr[i]);
+        }
+        return maxi;
+    }
+    
+    public static int maxDotProdTwoSubseq_rec(int[] nums1, int[] nums2, int l1, int l2){
+       if(l1 == 0 || l2 == 0){
+            return -(int) 1e8;
+        }
+        int val = nums1[l1 - 1] * nums2[l2 - 1];
+        int acceptBothNums = maxDotProdTwoSubseq_rec(nums1, nums2, l1 - 1, l2 - 1) + val;
+        int a = maxDotProdTwoSubseq_rec(nums1, nums2, l1 - 1, l2);
+        int b = maxDotProdTwoSubseq_rec(nums1, nums2, l1, l2 - 1);
+        return maximum(val, acceptBothNums, a, b);
+    }
 
