@@ -128,6 +128,7 @@
         return word1.length() + word2.length() - 2 * lcs_tab(word1, word2, word1.length(), word2,length(), dp);
     }
     
+    // leetcode question based on application of lcs -> 1035. Uncrossed Lines
     public static int maxUncrossedLines_rec(int[] nums1, int[] nums2, int l1, int l2){
         if(l1 == 0 || l2 == 0){
             return 0;
@@ -423,6 +424,38 @@
         int b = maxDotProdTwoSubseq_rec(nums1, nums2, l1, l2 - 1);
         return maximum(val, acceptBothNums, a, b);
     }
+    
+    public static int maxDotProdTwoSubseq_memo(int[] nums1, int[] nums2, int l1, int l2, int[][] dp){
+       if(l1 == 0 || l2 == 0){
+            return dp[l1][l2] = -(int) 1e8;
+        }
+        if(dp[l1][l2] != -(int)1e8){
+            return dp[l1][l2];
+        }
+        int val = nums1[l1 - 1] * nums2[l2 - 1];
+        int acceptBothNums = maxDotProdTwoSubseq_memo(nums1, nums2, l1 - 1, l2 - 1) + val;
+        int a = maxDotProdTwoSubseq_memo(nums1, nums2, l1 - 1, l2);
+        int b = maxDotProdTwoSubseq_memo(nums1, nums2, l1, l2 - 1);
+        return dp[l1][l2] = maximum(val, acceptBothNums, a, b);
+    }
+    
+    public static int maxDotProdTwoSubseq_tab(int[] nums1, int[] nums2, int L1, int L2, int[][] dp){
+         for(int l1 = 0; l1 < dp.length; l1++){
+             for(int l2 = 0; l2 < dp[0].length; l2++){
+                if(l1 == 0 || l2 == 0){
+                    dp[l1][l2] = -(int) 1e8;
+                    continue;
+                }
+                int val = nums1[l1 - 1] * nums2[l2 - 1];
+                int acceptBothNums = dp[l1 - 1][l2 - 1] + val;
+                int a = dp[l1 - 1][l2]; 
+                int b = dp[l1][l2 - 1];
+                dp[l1][l2] = maximum(val, acceptBothNums, a, b);
+             }
+         }
+         return dp[L1][L2];
+    }
+  
 
 -> longest palindromic substring ( leetcode )   -----> a direct tabulation problem...
 
@@ -449,6 +482,54 @@
         }
         return s.substring(si, si + MaxLen);
     }
+    
+ ->  Palindrome Partitioning II ( leetcode )   -----> application of above problem
+ 
+     public int palindromicPartitionII_rec(String s, int si, int ei, boolean[][] pdp){
+        if(pdp[si][ei] == true){
+            return 0;
+        }
+        int minCuts = (int)1e8;
+        for(int cut = si; cut <= ei; cut++){
+            if(pdp[si][cut] == true){
+                minCuts = Math.min(minCuts, palindromicPartitionII_rec(s, cut + 1, ei, pdp) + 1);
+            }
+        }
+        return minCuts;
+    }
+    
+    public int palindromicPartitionII_memo(String s, int si, int ei, int[] dp, boolean[][] pdp){
+        if(pdp[si][ei] == true){
+            return dp[si] = 0;
+        }
+        if(dp[si] != -1){
+            return dp[si];
+        }
+        int minCuts = (int)1e8;
+        for(int cut = si; cut <= ei; cut++){
+            if(pdp[si][cut] == true){
+                minCuts = Math.min(minCuts, palindromicPartitionII_memo(s, cut + 1, ei, dp, pdp) + 1);
+            }
+        }
+        return dp[si] = minCuts;
+    }
+    
+     public int palindromicPartitionII_tab(String s, int SI, int ei, int[] dp, boolean[][] pdp){
+        for(int si = ei; si >= 0; si--){
+            if(pdp[si][ei] == true){
+                dp[si] = 0;
+                continue;
+            }
+            int minCuts = (int)1e8;
+            for(int cut = si; cut <= ei; cut++){
+                if(pdp[si][cut] == true){
+                    minCuts = Math.min(minCuts, dp[cut + 1] + 1);
+                }
+            }
+            dp[si] = minCuts;
+        }
+        return dp[SI];
+    }
  
 -> longest common substring ( gfg )   -----> a direct tabulation problem...
 
@@ -469,3 +550,4 @@
         return maxLen;
     }
     
+-> 
