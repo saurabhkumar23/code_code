@@ -119,6 +119,15 @@
         return dp[L1][L2];
     }
     
+    // leetcode question based on application of lcs -> 583. Delete Operation for Two Strings
+    public static int minDeletions(String word1, String word2){
+        int[][] dp = new int[word1.length() + 1][word2.length() + 1];
+        for(int[] d : dp){
+            Arrays.fill(d, -1);
+        }
+        return word1.length() + word2.length() - 2 * lcs_tab(word1, word2, word1.length(), word2,length(), dp);
+    }
+    
     public static int maxUncrossedLines_rec(int[] nums1, int[] nums2, int l1, int l2){
         if(l1 == 0 || l2 == 0){
             return 0;
@@ -441,3 +450,22 @@
         return s.substring(si, si + MaxLen);
     }
  
+-> longest common substring ( gfg )   -----> a direct tabulation problem...
+
+    public static int longestCommonSubstring(String s1, String s2, int[][] dp){
+        int maxLen = -1;
+        for(int l1 = 0; l1 < dp.length; l1++){
+            for(int l2 = 0; l2 < dp[0].length; l2++){
+                if(l1 == 0 || l2 == 0){
+                    dp[l1][l2] = 0;
+                    continue;
+                }
+                if(s1.charAt(l1 - 1) == s2.charAt(l2 - 1)){
+                    dp[l1][l2] = dp[l1 - 1][l2 - 1] + 1;
+                }
+                maxLen = Math.max(maxLen, dp[l1][l2]);
+            }
+        }        
+        return maxLen;
+    }
+    
