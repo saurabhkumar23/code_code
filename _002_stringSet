@@ -484,6 +484,7 @@
     }
     
  ->  Palindrome Partitioning II ( leetcode )   -----> application of above problem
+     testcase - "fafaaabaageeg"
  
      public int palindromicPartitionII_rec(String s, int si, int ei, boolean[][] pdp){
         if(pdp[si][ei] == true){
@@ -550,4 +551,25 @@
         return maxLen;
     }
     
--> 
+-> Number of subsequences of the form a^i b^j c^k ( gfg ) --> kind of tabulation
+
+    public static int countSubseqOfFormAiBjCk(String s){
+        int n = s.length();
+        long emptyCount = 1;
+        long aCount, bCount, cCount = 0;
+        long mod = (long)1e9 + 7;
+        for(int i = 0; i < n; i++){
+            char ch = s.charAt(i);
+            if(ch == 'a'){
+                aCount = aCount + (emptyCount + aCount) % mod;
+            }
+            else if(ch == 'b'){
+                bCount = bCount + (aCount + bCount) % mod;
+            }
+            else if(ch == 'c'){
+                cCount = cCount + (bCount + cCount) % mod;
+            }
+        }
+        return int(cCount % mod);
+    }
+  
