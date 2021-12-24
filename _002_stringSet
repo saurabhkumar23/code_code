@@ -573,3 +573,30 @@
         return int(cCount % mod);
     }
   
+-> 139. word break ( leetcode ) --> kind of tabulation  
+   testcase - "mangoandsamsung" ["man","go","mango","and","sam","sung","samsung"]
+  
+    public boolean wordBreak(String s, List<String> wordDict) {
+        HashSet<String> hs = new HashSet<>();
+        int maxLen = 0;
+        for(String str : wordDict){
+            hs.add(str);
+            maxLen = Math.max(maxLen, str.length());
+        }
+        int n = s.length();
+        int[] dp = new int[n + 1];
+        dp[0] = 1;
+        for(int i = 0; i <= n; i++){
+            if(dp[i] == 1){
+                int j = i + 1;
+                while(j <= i + maxLen && j < dp.length){
+                    String substr = s.substring(i , j);
+                    if(hs.contains(substr) == true){
+                        dp[j] = 1;
+                    }
+                    j++;
+                }
+            }
+        }
+        return dp[n] == 0 ? false : true;
+    }
