@@ -60,6 +60,26 @@
         return dp[I][J];
     }
     
+    -> what if i need to return that string?
+    -> backengineering - we use DP to choose the desired recursive path.
+    
+     public static String lps_backEngg_rec(String s, int si, int ei, int[][] dp){
+        if(si >= ei){
+            return si == ei ? s.charAt(si) + "" : "";
+        }
+        if(s.charAt(si) == s.chatAt(ei)){
+            return s.charAt(si) + lps_backEngg_rec(s, si + 1, ei - 1, dp) + s.charAt(ei);
+        }
+        else{
+            if(dp[si + 1][ei] > dp[si][ei - 1]){
+                return lps_backEngg_rec(s, si + 1, ei, dp)
+            }
+            else{
+                return lps_backEngg_rec(s, si, ei - 1, dp)
+            }
+        }
+    }
+     
 -> longest common subsequence
 
     public static int lcs_rec(String s1, String s2, int l1, int l2){
