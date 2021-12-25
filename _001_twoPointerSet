@@ -582,6 +582,28 @@
         return dp[R][C];
     }
     
+     -> what if i need to return that string?
+    -> backengineering - we use DP to choose the desired recursive path.
+    
+    public static String goldMine_backEngg_rec(int[][] mine, int sr, int sc, int[][] dp, int[][] dir){
+        if(sc == mine[0].length - 1){
+            return "(" + sr + "," + sc + ")";
+        }
+        int ii = -1;
+        int maxGoldSoFar = -(int)1e9;
+        for(int i = 0; i < dir.length; i++){
+            int r = sr + dir[i][0];
+            int c = sc + dir[i][1];
+            if(r >= 0 && r < mine.length){
+                if(dp[r][c] > maxGoldSoFar){
+                    maxGoldSoFar = dp[r][c];
+                    ii = r;
+                }
+            }
+        }
+        return "(" + sr + "," + sc + ") -> " + goldMine_backEngg_rec(mine, ii, sc + 1, dp, dir);
+    }   
+    
  -> friends Pairing (gfg)
  
     static int mod = (int) 1e9 + 7;
