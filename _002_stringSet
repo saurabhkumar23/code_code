@@ -620,3 +620,21 @@
         }
         return dp[n] == 0 ? false : true;
     }
+    
+-> leetcode - 140. Word Break II
+    
+    public void wordBreakII_backEngg(String s, int si,int ei, List<String> wordDict, int[] dp, List<String> ans, String asf, int maxLen, HashSet<String> hs){
+        if(si > ei){
+            ans.add(asf.substring(0, asf.length() - 1));
+            return;
+        }
+        for(int l = 1; l <= maxLen && l + si <= ei + 1; l++){
+            if(dp[l + si] == 1){
+                String substr = s.substring(si, l + si);
+                if(hs.contains(substr)){
+                    wordBreakII(s, l + si, ei, wordDict, dp, ans, asf + s.substring(si, l + si) + " ", maxLen, hs);
+                }
+            }
+        }
+    }
+ 
