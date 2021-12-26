@@ -1,1 +1,38 @@
+-> leetcode - 300. Longest Increasing Subsequence
+
+    public int LIS_rec(int[] nums, int ei){
+        int maxLis = 1;
+        for(int i = ei - 1; i >= 0; i--){
+            if(nums[i] < nums[ei]){
+                maxLis = Math.max(maxLis, LIS_rec(nums, i) + 1);
+            }
+        }
+        return maxLis;
+    }
+
+    public int LIS_memo(int[] nums, int ei, int[] dp){
+        int maxLis = 1;
+        if(dp[ei] != 0){
+            return dp[ei];
+        }
+        for(int i = ei - 1; i >= 0; i--){
+            if(nums[i] < nums[ei]){
+                maxLis = Math.max(maxLis, LIS_memo(nums, i, dp) + 1);
+            }
+        }
+        return dp[ei] = maxLis;
+    }
+ 
+     public int LIS_tab(int[] nums, int IDX, int[] dp){
+        for(int ei = 0; ei < dp.length; ei++){
+            int maxLis = 1;
+            for(int i = ei - 1; i >= 0; i--){
+                if(nums[i] < nums[ei]){
+                    maxLis = Math.max(maxLis, dp[i] + 1);
+                }
+            }
+            dp[ei] = maxLis;
+        }
+        return dp[IDX];
+    }
 
