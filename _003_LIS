@@ -35,4 +35,65 @@
         }
         return dp[IDX];
     }
+    
+-> concept - last thing is the view w.r.t to left...
+             lis ( L - R ) -> 1, 5, 8, 10 = lis ending at 10.  
+             lis ( R - L ) -> 10, 5, 2, 1 = lds starting at 10. 
+             lds ( L - R ) -> 1, 5, 6, 10 = lds ending at 10. 
+             lds ( R - L ) -> 10, 15, 88, 100 = lis starting at 10. 
 
+-> longest bitonic subsequence - gfg
+
+    public void lis_LR(int[] nums, int[] lis_dp){
+        for(int i = 0; i < lis_dp.length; i++){
+            int maxLen = 1;
+            for(int ei = i - 1; ei >= 0; ei--){
+                if(nums[ei] < nums[i]){
+                    maxLen = Math.max(maxLen, lis_dp[ei] + 1);
+                }
+            }
+            lis_dp[i] = maxLen;
+        }
+    }
+    
+    public void lis_RL(int[] nums, int[] lds_dp){
+        for(int i = lds_dp.length - 1; i >= 0; i--){
+            int maxLen = 1;
+            for(int ei = i + 1; ei < lds_dp.length; ei++){
+                if(nums[ei] < nums[i]){
+                    maxLen = Math.max(maxLen, lds_dp[ei] + 1);
+                }
+            }
+            lds_dp[i] = maxLen;
+        }
+    }
+    
+    
+    public int LongestBitonicSequence(int[] nums)
+    {
+        // Code here
+        int[] lis_dp = new int[nums.length];
+        int[] lds_dp = new int[nums.length];
+        lis_LR(nums, lis_dp);
+        lis_RL(nums, lds_dp);
+
+        int lbs = 1;
+        for(int i = 0; i < lis_dp.length; i++){
+            lbs = Math.max(lbs, lis_dp[i] + lds_dp[i] - 1);
+        }
+        return lbs;
+    }
+             
+-> Maximum Sum Increasing Subsequence - gfg
+
+    public static void maxSumIS_tab(int[] arr, int[] dp){
+	    for(int ei = 0; ei < dp.length; ei++){
+            int maxLis = arr[ei];
+            for(int i = ei - 1; i >= 0; i--){
+                if(arr[i] < arr[ei]){
+                    maxLis = Math.max(maxLis, dp[i] + arr[ei]);
+                }
+            }
+            dp[ei] = maxLis;
+        }
+	}
