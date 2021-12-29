@@ -1,0 +1,128 @@
+-> coin change problem set - permutations
+
+    public static int coinsPermutations_rec(int[] arr, int target){
+        if(target == 0){
+            return 1;
+        }
+        int ways = 0;
+        for(int i = 0; i < arr.length; i++){
+            if(target - arr[i] >= 0){
+                ways += coinsPermutations_rec(arr, target - arr[i]);
+            }
+        }
+        return ways;
+    }
+    
+    public static int coinsPermutations_memo(int[] arr, int target, int[] dp){
+        if(target == 0){
+            return dp[target] = 1;
+        }
+        if(dp[target] != -1){
+            return dp[target];
+        }
+        int ways = 0;
+        for(int i = 0; i < arr.length; i++){
+            if(target - arr[i] >= 0){
+                ways += coinsPermutations_memo(arr, target - arr[i], dp);
+            }
+        }
+        return dp[target] = ways;
+    }
+    
+    public static int coinsPermutations_tab(int[] arr, int TAR, int[] dp){
+        for(int tar = 0; tar < dp.length; tar++){
+            if(tar == 0){
+                dp[tar] = 1;
+                continue;
+            }
+            int ways = 0;
+            for(int i = 0; i < arr.length; i++){
+                if(tar - arr[i] >= 0){
+                    ways += dp[tar - arr[i]];
+                }
+            }
+            dp[tar] = ways;
+        }
+        return dp[TAR];
+    }
+    
+-> coin change problem set - combinations    --> question where we can observe memo is faster than tabulation.
+    
+    public static int coinsCombinations_rec(int[] arr, int tar, int ei){
+        if(tar == 0){
+            return 1;
+        }
+        int ways = 0;
+        for(int i = ei; i >= 0; i--){
+            if(tar - arr[i] >= 0){
+                ways += coinsCombinations_rec(arr, tar - arr[i], i);
+            }
+        }
+        return ways;
+    }
+    
+    public static int coinsCombinations_memo(int[] arr, int tar, int ei, int[][] dp){
+        if(tar == 0){
+            return dp[ei][tar] = 1;
+        }
+        if(dp[ei][tar] != -1){
+            return dp[ei][tar];
+        }
+        int ways = 0;
+        for(int i = ei; i >= 0; i--){
+            if(tar - arr[i] >= 0){
+                ways += coinsCombinations_memo(arr, tar - arr[i], i, dp);
+            }
+        }
+        return dp[ei][tar] = ways;
+    }
+    
+    // memo faster than tab.
+    public static int coinsCombinations_tab(int[] arr, int TAR, int EI, int[][] dp){
+        for(int ei = 0; ei < dp.length; ei++){
+            for(int tar = 0; tar < dp[0].length; tar++){
+                if(tar == 0){
+                    dp[ei][tar] = 1;
+                    continue;
+                }
+                int ways = 0;
+                for(int i = ei; i >= 0; i--){
+                    if(tar - arr[i] >= 0){
+                        ways += dp[i][tar - arr[i]]; 
+                    }
+                }
+                dp[ei][tar] = ways;
+            }
+        }
+        return dp[EI][TAR];
+    }
+    
+    // using 1-d dp.
+    // tab faster than memo.
+    public static int coinsCombinations_tab_opti(int[] arr, int TAR, int[] dp){
+        dp[0] = 1;
+        for(int i = 0; i < arr.length; i++){
+            for(int tar = arr[i]; tar < dp.length; tar++){
+                dp[tar] += dp[tar - arr[i]];
+            }
+        }
+        return dp[TAR];
+    }
+ 
+ -> leetcode - 322. Coin Change
+ 
+     public static int coinChange(int[] arr, int TAR, int[] dp){
+        for(int tar = 0; tar < dp.length; tar++){
+            if(tar == 0){
+                dp[tar] = 0;
+                continue;
+            }
+            for(int i = 0; i < arr.length; i++){
+                if(tar - arr[i] >= 0){
+                    dp[tar] = Math.min(dp[tar], dp[tar - arr[i]] + 1);
+                }
+            }
+        }
+        return dp[TAR];
+    }
+  
