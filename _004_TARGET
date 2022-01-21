@@ -126,3 +126,116 @@
         return dp[TAR];
     }
   
+-> subset sum problem (gfg)
+
+    static int targetSum_rec(int[] arr, int n, int tar){
+        if(n == 0 || tar == 0){
+            return tar == 0 ? 1 : 0;
+        }
+        boolean res = false;
+        if(tar - arr[n - 1] >= 0){
+            res = res || targetSum_rec(arr, n - 1, tar - arr[n - 1]) == 1;
+        }
+        res = res || targetSum_rec(arr, n - 1, tar) == 1;
+        return res == true ? 1 : 0;
+    }
+    
+    static int targetSum_memo(int[] arr, int n, int tar, int[][] dp){
+        if(n == 0 || tar == 0){
+            return dp[n][tar] = (tar == 0 ? 1 : 0);
+        }
+        if(dp[n][tar] != -1){
+            return dp[n][tar];
+        }
+        boolean res = false;
+        if(tar - arr[n - 1] >= 0){
+            res = res || targetSum_memo(arr, n - 1, tar - arr[n - 1], dp) == 1;
+        }
+        res = res || targetSum_memo(arr, n - 1, tar, dp) == 1;
+        return dp[n][tar] = res == true ? 1 : 0;
+    }
+    
+    static int targetSum_tab(int[] arr, int N, int TAR, int[][] dp){
+        for(int n = 0; n < dp.length; n++){
+            for(int tar = 0; tar < dp[0].length; tar++){
+                if(n == 0 || tar == 0){
+                    dp[n][tar] = (tar == 0 ? 1 : 0);
+                    continue;
+                }
+                boolean res = false;
+                if(tar - arr[n - 1] >= 0){
+                    res = res || dp[n -1][tar - arr[n - 1]] == 1;
+                }
+                res = res || dp[n - 1][tar] == 1;
+                dp[n][tar] = res == true ? 1 : 0;
+            }
+        }
+        return dp[N][TAR];
+    }
+    
+    // fill your dp with tab not with memo
+    static int targetSum_backEngg_rec(int[] arr, int n, int tar int[][] dp, int psf){
+        if(n == 0 || tar == 0){
+            if(tar == 0){
+                System.out.println(psf);
+                return 1;
+            }
+            return 0;
+        }
+        int count = 0;
+        if(tar - arr[n - 1] >= 0 && dp[n - 1][tar - arr[n - 1]] == 1){
+            count += targetSum_backEngg_rec(arr, n - 1, tar - arr[n - 1], dp, psf + arr[n - 1] + " ");
+        }
+        if(dp[n - 1][tar] == 1){
+            count += targetSum_backEngg_rec(arr, n - 1, tar, dp, psf);
+        }
+        return count;
+    }
+    
+-> 01 knapsack (gfg)
+   same as above question....
+
+    static int knapSack_rec(int[] wt, int[] val, int n, int w){
+        if(n == 0 || w == 0){
+            return 0;
+        }
+        int maxAns = 0;
+        if(w - wt[n - 1] >= 0){
+            maxAns = Math.max(knapSack_rec(wt, val, n - 1, w - wt[n - 1]) + val[n - 1] , maxAns);
+        }
+        maxAns = Math.max(knapSack_rec(wt, val, n - 1, w) , maxAns);
+        return maxAns; 
+    }
+    
+    static int knapSack_memo(int[] wt, int[] val, int n, int w, int[][] dp){
+        if(n == 0 || w == 0){
+            return dp[n][w] = 0;
+        }
+        if(dp[n][w] != -1){
+            return dp[n][w];
+        }
+        int maxAns = 0;
+        if(w - wt[n - 1] >= 0){
+            maxAns = Math.max(knapSack_memo(wt, val, n - 1, w - wt[n - 1], dp) + val[n - 1] , maxAns);
+        }
+        maxAns = Math.max(knapSack_memo(wt, val, n - 1, w, dp) , maxAns);
+        return dp[n][w] = maxAns; 
+    }
+  
+    static int knapSack_tab(int[] wt, int[] val, int N, int W, int[][] dp){
+        for(int n = 0; n < dp.length; n++){
+            for(int w = 0; w < dp[0].length; w++){
+                if(n == 0 || w == 0){
+                    dp[n][w] = 0;
+                    continue;
+                }
+                int maxAns = 0;
+                if(w - wt[n - 1] >= 0){
+                    maxAns = Math.max(dp[n - 1][w - wt[n - 1]] + val[n - 1] , maxAns);
+                }
+                maxAns = Math.max(dp[n - 1][w] , maxAns);
+                dp[n][w] = maxAns; 
+            }
+        }
+        return dp[N][W];
+    }
